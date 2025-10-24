@@ -1,3 +1,5 @@
+![Social Media Scheduler Image](images/Wiki_Image.png)
+
 # Social Media Scheduler
 
 A simple DIY scheduler for 1 post/day across Instagram, Facebook, Pinterest, and X (Twitter). Built with HTML/JS frontend on Cloudflare Pages + Workers backend for cron-scheduled posting via APIs.
