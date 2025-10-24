@@ -1,4 +1,4 @@
-![Social Media Scheduler Image](images/Wiki_Image.png)
+![Social Media Scheduler Image](https://social-media-scheduler.jdge.cc/images/Wiki_Image.png)
 
 # Social Media Scheduler
 
