@@ -1,0 +1,20 @@
+name = "social-media-scheduler"
+compatibility_date = "2025-10-24"  # Today's date (adjust to your exact creation date if needed, e.g., "2024-10-02")
+
+# Declare secrets (no values here—they're bound via CLI or dashboard)
+[secrets]
+PINTEREST_KEY
+X_KEY_ACCESS
+X_KEY_SECRET
+X_KEY_BEARER
+FACEBOOK_KEY
+INSTAGRAM_KEY
+
+# Pages configuration for hosting the GUI (static files like index.html)
+[pages_build_output_dir]
+dir = "dist"  # Directory where your built static files are (e.g., after running a build command like npm run build)
+
+# Enable Pages Functions to handle API routes (e.g., /api/boards, /api/post)
+# This integrates Worker-like logic with Pages on the same domain
+[[pages_build_output_dir.functions]]
+directory = "functions"  # Directory for your function code (move src/index.js logic here, e.g., as functions/api/boards.js)

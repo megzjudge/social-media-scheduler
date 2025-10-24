@@ -1,0 +1,10 @@
+body { font-family: Arial, sans-serif; margin: 20px; }
+.form-group { margin-bottom: 15px; }
+label { display: block; margin-bottom: 5px; }
+input, select, textarea { width: 100%; padding: 8px; }
+.metadata-options { display: flex; flex-wrap: wrap; gap: 10px; }
+.metadata-option { cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; }
+.selected { background-color: #007bff; color: white; }
+button { padding: 10px 20px; background-color: #28a745; color: white; border: none; cursor: pointer; }
+button:hover { background-color: #218838; }
+#result { margin-top: 20px; color: green; }

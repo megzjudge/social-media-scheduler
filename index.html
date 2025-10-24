@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes, maximum-scale=5">
+  <title>Social Media Scheduler - Twitter/X/Instagram/Facebook/Pinterest Auto Posting</title>
+  <meta property="og:title" content="Social Media Scheduler - Twitter/X/Instagram/Facebook/Pinterest Auto Posting">
+  <meta property="twitter:title" content="Social Media Scheduler - Twitter/X/Instagram/Facebook/Pinterest Auto Posting">
+  <meta property="og:site_name" content="Social Media Scheduler - Twitter/X/Instagram/Facebook/Pinterest Auto Posting">
+  <link rel="stylesheet" type="text/css" href="styles.css"> 
+  <link rel="alternate" href="https://social-media-scheduler.jdge.cc" hreflang="en">
+  <link rel="canonical" href="https://social-media-scheduler.jdge.cc">
+  <meta property="og:url" content="https://social-media-scheduler.jdge.cc">
+  <link rel="icon" type="image/svg+xml" href="images/social-media-scheduler-logo.png">
+  <meta property="og:image" content="https://social-media-scheduler.jdge.cc/images/hexaco_thumbnail.jpg">  
+  <link itemprop="twitter:image" href="https://social-media-scheduler.jdge.cc/images/hexaco_thumbnail.jpg">
+  <link itemprop="twitter:image:alt" href="Social Media Scheduler - Twitter/X/Instagram/Facebook/Pinterest Auto Posting">
+  <link itemprop="thumbnailUrl" href="https://social-media-scheduler.jdge.cc/social-media-scheduler-logo.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="author" content="Megan Judge">
+  <meta name="robots" content="index, nofollow">
+  <meta name="date" content="2025-10-24">
+  <meta property="og:updated_time" content="2025-10-24">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="en_AU">
+  <meta name="description" content="Automate and schedule posts to Twitter/X, Pinterest, Facebook Pages, and Instagram with ease. Manage metadata, hashtags, and media links for efficient social media management.">
+  <meta property="og:description" content="Automate and schedule posts to Twitter/X, Pinterest, Facebook Pages, and Instagram with ease. Manage metadata, hashtags, and media links for efficient social media management.">
+  <meta property="twitter:description" content="Automate and schedule posts to Twitter/X, Pinterest, Facebook Pages, and Instagram with ease. Manage metadata, hashtags, and media links for efficient social media management.">
+  <meta name="keywords" content="social media scheduler, Twitter, X, Pinterest, Instagram, Facebook, auto posting, hashtags, metadata, social media management, content scheduling">
+  <meta name="subject" content="Social Media Scheduler - Twitter/X/Instagram/Facebook/Pinterest Auto Posting">
+  <meta name="theme-color" content="#4E6E39">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main>
+    <h1>Social Media Scheduler - Twitter/X/Instagram/Facebook/Pinterest Auto Posting</h1>
+    <form id="postForm">
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" placeholder="e.g., Analyst Assassination" autocomplete="name" required>
+      </div>
+      
+      <div class="form-group">
+        <label>Metadata (Select multiple hashtags):</label>  <!-- Removed for attribute -->
+        <div id="metadataContainer" class="metadata-options" role="group" aria-label="Select multiple hashtags">  <!-- Added aria-label for accessibility -->
+          <!-- Options will be populated by JS -->
+        </div>
+        <input type="hidden" id="selectedMetadata" name="selectedMetadata" autocomplete="off" aria-hidden="true">
+      </div>
+      
+      <div class="form-group">
+        <label for="url">URL (Media Link):</label>
+        <input type="url" id="url" placeholder="e.g., https://imgflip.com/i/6waxs7" autocomplete="url" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="pinterestTitle">Pinterest Title:</label>
+        <input type="text" id="pinterestTitle" placeholder="e.g., Funny MBTI Meme" autocomplete="off" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="board">Board:</label>
+        <select id="board" autocomplete="off" required>
+          <option value="">Loading boards...</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="altText">Alt Text (Auto-filled from Title):</label>
+        <input type="text" id="altText" autocomplete="off" readonly>
+      </div>
+      
+      <button type="submit">Post to Pinterest</button>
+    </form>
+    
+    <div id="result"></div>
+  </main>
+</body>
+</html>
