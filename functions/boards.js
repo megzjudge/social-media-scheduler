@@ -1,17 +1,32 @@
-export async function onRequest({ request, env }) {
-  if (request.method === "OPTIONS") return new Response(null, { status: 204 });
-
+export async function onRequest({ env }) {
   const token = env.PINTEREST_ACCESS_TOKEN;
   if (!token) return json({ error: "Missing PINTEREST_ACCESS_TOKEN" }, 500);
 
-  const r = await fetch("https://api.pinterest.com/v5/boards?page_size=50", {
-    headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
-  });
-  const data = await r.json().catch(() => ({}));
-  if (!r.ok) return json({ error: data?.message || "Pinterest boards error" }, r.status);
+  let r, text, data;
+  try {
+    r = await fetch("https://api.pinterest.com/v5/boards?page_size=50", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    });
+    text = await r.text();
+    try { data = JSON.parse(text); } catch { data = { raw: text }; }
+  } catch (e) {
+    return json({ error: `Network error calling Pinterest`, details: String(e) }, 502);
+  }
 
-  const boards = Array.isArray(data.items) ? data.items.map(b => ({ id: b.id, name: b.name })) : [];
-  return json(boards);
+  if (!r.ok) {
+    return json({
+      error: "Pinterest API error",
+      status: r.status,
+      details: data?.message || data?.error || data?.raw || data,
+      hint: "Likely token missing scopes or expired. Needs boards:read.",
+    }, r.status);
+  }
+
+  const items = Array.isArray(data.items) ? data.items : [];
+  return json(items.map(b => ({ id: b.id, name: b.name })));
 }
 
 function json(body, status = 200) {

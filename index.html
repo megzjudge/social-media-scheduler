@@ -58,7 +58,7 @@
           <div class="form-row">
             <label>Metadata (select multiple hashtags)</label>
             <div id="metadataContainer" class="metadata-options" role="group" aria-label="Select multiple hashtags"></div>
-            <input type="hidden" id="selectedMetadata" autocomplete="off" aria-hidden="true" />
+            <input type="hidden" id="selectedMetadata" aria-hidden="true" tabindex="-1" />
           </div>
 
           <!-- Uploader (single instance) -->
@@ -120,18 +120,12 @@
         <div class="body">
           <h2 id="previewHeading">Live Preview</h2>
 
+          <div id="previewCaption">—</div>
+
           <div class="preview">
             <div class="media" id="mediaPreview" aria-label="Media preview">
               <span class="muted">No image yet</span>
             </div>
-
-            <!-- Single caption block; no labels or duplicate “title” -->
-            <div id="previewCaption">—</div>
-          </div>
-
-          <h2 style="margin-top:16px">Status</h2>
-          <div id="status" class="status" aria-live="polite"></div>
-        </div>
       </aside>
     </div>
   </main>

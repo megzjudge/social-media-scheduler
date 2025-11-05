@@ -59,7 +59,7 @@ function composedCaption(){
 function updatePreview(){
   const caption = composedCaption();
   const captionEl = document.getElementById("previewCaption");
-  if (captionEl) captionEl.textContent = caption || "—";
+  if (captionEl) captionEl.textContent = composedCaption() || "—";
 
   // media
   const mediaPreview = document.getElementById("mediaPreview");
@@ -156,16 +156,23 @@ function initHashtags(){
 async function fetchBoards(){
   if (!boardEl) return;
   try {
-    const res  = await fetch("/boards", { headers: { "Accept": "application/json" } });
+    const res  = await fetch(new URL('/boards', location.origin));
     const text = await res.text();
     let data;
-    try { data = JSON.parse(text); } 
-    catch { throw new Error(`Expected JSON from /boards, got: ${text.slice(0, 60)}…`); }
+    try { data = JSON.parse(text); } catch { throw new Error(`Expected JSON from /boards, got: ${text.slice(0, 80)}…`); }
 
-    if (!Array.isArray(data)) throw new Error("Boards response is not an array");
+    if (!res.ok) {
+      const details = (data && (data.details || data.error)) ? ` (${data.details || data.error})` : '';
+      throw new Error(`Boards fetch failed: ${res.status}${details}`);
+    }
+    if (!Array.isArray(data)) {
+      // server returned an error object with {error:...}
+      throw new Error(data?.error ? `Boards error: ${data.error}` : 'Boards response not an array');
+    }
+
     boardEl.innerHTML = '<option value="">Select a board</option>';
     data.forEach(b => {
-      const opt = document.createElement("option");
+      const opt = document.createElement('option');
       opt.value = b.id;
       opt.textContent = b.name;
       boardEl.appendChild(opt);
@@ -173,7 +180,8 @@ async function fetchBoards(){
   } catch (err) {
     console.error(err);
     boardEl.innerHTML = '<option value="">Error loading boards</option>';
-    if (resultEl) resultEl.textContent = "Could not load boards. Check your functions/boards.js and token.";
+    const resultEl = document.getElementById('result');
+    if (resultEl) resultEl.textContent = 'Could not load boards. Check your functions/boards.js and token.';
   }
   refreshPostEnabled();
 }
