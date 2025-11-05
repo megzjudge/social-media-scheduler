@@ -5,15 +5,12 @@ export async function onRequest({ env }) {
   let r, text, data;
   try {
     r = await fetch("https://api.pinterest.com/v5/boards?page_size=50", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-      },
+      headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
     });
     text = await r.text();
     try { data = JSON.parse(text); } catch { data = { raw: text }; }
   } catch (e) {
-    return json({ error: `Network error calling Pinterest`, details: String(e) }, 502);
+    return json({ error: "Network error calling Pinterest", details: String(e) }, 502);
   }
 
   if (!r.ok) {
@@ -21,7 +18,7 @@ export async function onRequest({ env }) {
       error: "Pinterest API error",
       status: r.status,
       details: data?.message || data?.error || data?.raw || data,
-      hint: "Likely token missing scopes or expired. Needs boards:read.",
+      hint: "Token invalid/expired or missing scope. Needs boards:read.",
     }, r.status);
   }
 

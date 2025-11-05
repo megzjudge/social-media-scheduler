@@ -19,16 +19,16 @@ body {
 
 main {
   max-width: 1100px;
-  margin: 32px auto;       /* centers the page */
-  padding: 0 16px;          /* even left/right padding */
+  margin: 32px auto;      /* centers the page */
+  padding: 0 16px;         /* even left/right padding */
 }
 
 h1 { margin: 20px 0; }
-.grid { margin: 0 auto; }   /* keep grids centered */
+.grid { margin: 0 auto; }  /* keep grids centered */
 
 /* ===== Forms ===== */
 .form-group,
-.form-row {                 /* support both class names */
+.form-row {                /* support both class names */
   margin-bottom: 15px;
 }
 .form-row + .form-row { margin-top: 16px; }  /* breathing room between rows */
@@ -122,7 +122,7 @@ button:hover { background: #eee; }
   border-radius: 10px;
   padding: 14px;
 }
-#uploader { margin-top: 8px; }        /* extra spacing above uploader */
+#uploader { margin-top: 8px; }   /* extra spacing above uploader */
 .uploader .actions { margin-top: 8px; }
 .uploader.drag { border-color: #999; }
 
@@ -142,29 +142,43 @@ button:hover { background: #eee; }
 }
 
 /* ===== Live preview ===== */
+.preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;        /* center the grey box + caption */
+}
+
+/* Grey box: shrink-wrap to image, centered, no overflow */
 .media {
-  display: grid;
+  display: inline-grid;       /* shrink-wrap */
   place-items: center;
+  background: #fafafa;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   padding: 8px;
-  background: #fafafa;
-  overflow: hidden;   /* prevents spill on tiny screens */
-  width: 100%;
+  overflow: hidden;
+  width: fit-content;
+  max-width: 100%;
 }
 .media img {
-  max-width: 500px;  /* desktop cap */
+  display: block;             /* remove baseline gap */
+  max-width: 500px;           /* desktop cap */
   width: 100%;
   height: auto;
   object-fit: contain;
 }
 
-/* Caption below image */
-#previewCaption { margin-top: 10px; font-size: 1rem; line-height: 1.4; }
+/* Caption below image (with extra breathing room) */
+#previewCaption {
+  margin-top: 14px;
+  padding: 4px 0;
+  font-size: 1rem;
+  line-height: 1.4;
+}
 
 /* ===== Mobile adjustments ===== */
 @media (max-width: 600px) {
-  .media { height: 85vh; max-width: 100vw; }
+  .media { height: auto; max-width: 100vw; }
   .media img {
     max-height: 85vh;
     max-width: 100%;
