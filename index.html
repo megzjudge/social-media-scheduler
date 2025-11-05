@@ -41,16 +41,16 @@
         <div class="body">
           <h2 id="composerHeading">Compose</h2>
 
-          <!-- Title -->
+          <!-- Text (used for caption across platforms) -->
           <div class="form-row">
-            <label for="name">Title / Lead-in</label>
-            <input id="name" type="text" placeholder="e.g., Analyst Assassination" required />
+            <label for="name">Text</label>
+            <input id="name" type="text" placeholder="What do you want to say?" autocomplete="off" required />
           </div>
 
           <!-- Optional media URL -->
           <div class="form-row">
-            <label for="url">Optional Media URL (if already hosted)</label>
-            <input id="url" type="url" placeholder="https://example.com/image.jpg" />
+            <label for="url">URL</label>
+            <input id="url" type="url" placeholder="https://example.com/image.jpg" autocomplete="url" />
             <span class="muted">If you upload below, this can be left empty.</span>
           </div>
 
@@ -61,7 +61,7 @@
             <input type="hidden" id="selectedMetadata" autocomplete="off" aria-hidden="true" />
           </div>
 
-          <!-- Uploader -->
+          <!-- Uploader (single instance) -->
           <div class="form-row">
             <label for="fileInput">Upload Image</label>
             <div id="uploader" class="uploader" role="region" aria-label="Image uploader (drag and drop)">
@@ -72,7 +72,7 @@
               </div>
               <input id="fileInput" type="file" accept="image/*" />
             </div>
-            <div class="muted">Images are previewed instantly. On post, the image is uploaded and the returned public URL is used.</div>
+            <div class="muted">Images preview locally. Upload happens only when you click Post.</div>
           </div>
 
           <!-- Platform toggles -->
@@ -96,13 +96,13 @@
           <!-- Pinterest extras -->
           <div class="form-row" id="pinterestExtras" style="display:none">
             <label for="pinterestTitle">Pinterest Title</label>
-            <input id="pinterestTitle" type="text" placeholder="e.g., Funny MBTI Meme" required />
+            <input id="pinterestTitle" type="text" placeholder="e.g., Funny MBTI Meme" autocomplete="off" />
             <label for="board">Pinterest Board</label>
-            <select id="board">
+            <select id="board" autocomplete="off">
               <option value="">Loading boards…</option>
             </select>
             <label for="altText">Alt Text <span class="muted">(auto-filled from title; editable)</span></label>
-            <input id="altText" type="text" />
+            <input id="altText" type="text" autocomplete="off" />
           </div>
 
           <!-- Post button -->
@@ -115,22 +115,18 @@
         </div>
       </section>
 
-      <!-- Preview & status -->
+      <!-- Live Preview (simplified: image + single caption line) -->
       <aside class="card" aria-labelledby="previewHeading">
         <div class="body">
           <h2 id="previewHeading">Live Preview</h2>
+
           <div class="preview">
             <div class="media" id="mediaPreview" aria-label="Media preview">
               <span class="muted">No image yet</span>
             </div>
-            <div>
-              <div class="muted">Title</div>
-              <div id="previewTitle">—</div>
-            </div>
-            <div>
-              <div class="muted">Caption / Description</div>
-              <div id="previewDesc">—</div>
-            </div>
+
+            <!-- Single caption block; no labels or duplicate “title” -->
+            <div id="previewCaption">—</div>
           </div>
 
           <h2 style="margin-top:16px">Status</h2>

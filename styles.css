@@ -1,10 +1,196 @@
-body { font-family: Arial, sans-serif; margin: 20px; }
-.form-group { margin-bottom: 15px; }
-label { display: block; margin-bottom: 5px; }
-input, select, textarea { width: 100%; padding: 8px; }
-.metadata-options { display: flex; flex-wrap: wrap; gap: 10px; }
-.metadata-option { cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; }
-.selected { background-color: #007bff; color: white; }
-button { padding: 10px 20px; background-color: #28a745; color: white; border: none; cursor: pointer; }
-button:hover { background-color: #218838; }
-#result { margin-top: 20px; color: green; }
+/* ===== Base layout ===== */
+:root {
+  --text: #111;
+  --muted: #666;
+  --primary: #28a745;
+  --primary-hover: #218838;
+  --platform-selected-bg: #e9f7ee;
+  --platform-selected-border: #9cd3ae;
+  --chip: #007bff;
+  --chip-text: #fff;
+  --border: #ccc;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  color: var(--text);
+}
+
+main {
+  max-width: 1100px;
+  margin: 32px auto;        /* centers the page */
+  padding: 0 16px;           /* even left/right padding */
+}
+
+h1 { margin: 20px 0; }
+
+/* Optional two-column grids in some versions of the page */
+.grid { margin: 0 auto; }
+
+/* ===== Forms ===== */
+.form-group,
+.form-row {            /* support both class names */
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  max-width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  outline: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #999;
+}
+
+/* ===== Hashtag chips ===== */
+.metadata-options {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.metadata-option {
+  background: var(--primary);
+  color: #fff;
+  border: 1px solid var(--primary);
+}
+
+.metadata-option:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+}
+
+/* Selected = same feel as platform selected (light green) */
+.metadata-option.selected,
+.metadata-option[aria-pressed="true"] {
+  background: var(--platform-selected-bg);
+  color: #111;
+  border-color: var(--platform-selected-border);
+}
+
+/* ===== Buttons ===== */
+button,
+.btn {
+  padding: 10px 16px;
+  background: var(--primary);
+  color: #fff;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover,
+.btn:hover { background: var(--primary-hover); }
+
+.btn.ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Avoid button overflow on narrow screens */
+.platforms,
+.uploader .actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Toggle look (platform buttons) */
+.toggle {
+  background: #f6f6f6;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.toggle[aria-pressed="true"] {
+  background: #e9f7ee;
+  border-color: #9cd3ae;
+}
+
+/* ===== Uploader ===== */
+.uploader {
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.uploader.drag { border-color: #999; }
+
+/* ===== Status / results ===== */
+#result { margin-top: 16px; color: #2e7d32; }
+.status {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.9rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 10px;
+  max-height: 220px;
+  overflow: auto;
+}
+
+/* ===== Live preview ===== */
+.media {
+  display: grid;
+  place-items: center;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px;
+  background: #fafafa;
+}
+
+/* Desktop: image up to 500px wide */
+.media img {
+  max-width: 500px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Caption text below image */
+#previewCaption {
+  margin-top: 10px;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+/* Hide the native file input; we trigger it via the green button */
+#fileInput { display: none; }
+
+/* ===== Mobile adjustments ===== */
+@media (max-width: 600px) {
+  .media {
+    height: 85vh;
+  }
+
+  .media img {
+    max-height: 85vh; width: auto;
+  }
+
+  .card .body {
+    padding: 12px;
+  }
+
+  .form-group, .form-row {
+    margin-bottom: 12px;
+  }
+}
