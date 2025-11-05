@@ -33,49 +33,111 @@
 </head>
 <body>
   <main>
-    <h1>Social Media Scheduler - Twitter/X/Instagram/Facebook/Pinterest Auto Posting</h1>
-    <form id="postForm">
-      <div class="form-group">
-        <label for="name">Name:</label>
-        <input type="text" id="name" placeholder="e.g., Analyst Assassination" autocomplete="name" required>
-      </div>
-      
-      <div class="form-group">
-        <label>Metadata (Select multiple hashtags):</label>  <!-- Removed for attribute -->
-        <div id="metadataContainer" class="metadata-options" role="group" aria-label="Select multiple hashtags">  <!-- Added aria-label for accessibility -->
-          <!-- Options will be populated by JS -->
-        </div>
-        <input type="hidden" id="selectedMetadata" name="selectedMetadata" autocomplete="off" aria-hidden="true">
-      </div>
-      
-      <div class="form-group">
-        <label for="url">URL (Media Link):</label>
-        <input type="url" id="url" placeholder="e.g., https://imgflip.com/i/6waxs7" autocomplete="url" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="pinterestTitle">Pinterest Title:</label>
-        <input type="text" id="pinterestTitle" placeholder="e.g., Funny MBTI Meme" autocomplete="off" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="board">Board:</label>
-        <select id="board" autocomplete="off" required>
-          <option value="">Loading boards...</option>
-        </select>
-      </div>
-      
-      <div class="form-group">
-        <label for="altText">Alt Text (Auto-filled from Title):</label>
-        <input type="text" id="altText" autocomplete="off" readonly>
-      </div>
+    <h1>Social Media Scheduler – Twitter/X · Instagram · Facebook · Pinterest</h1>
 
-      <div id="result" aria-live="polite" role="status"></div>
-      
-      <button type="submit">Post to Pinterest</button>
-    </form>
-    
-    <div id="result"></div>
+    <div class="grid">
+      <!-- Composer -->
+      <section class="card" aria-labelledby="composerHeading">
+        <div class="body">
+          <h2 id="composerHeading">Compose</h2>
+
+          <!-- Title -->
+          <div class="form-row">
+            <label for="name">Title / Lead-in</label>
+            <input id="name" type="text" placeholder="e.g., Analyst Assassination" required />
+          </div>
+
+          <!-- Optional media URL -->
+          <div class="form-row">
+            <label for="url">Optional Media URL (if already hosted)</label>
+            <input id="url" type="url" placeholder="https://example.com/image.jpg" />
+            <span class="muted">If you upload below, this can be left empty.</span>
+          </div>
+
+          <!-- Hashtags -->
+          <div class="form-row">
+            <label>Metadata (select multiple hashtags)</label>
+            <div id="metadataContainer" class="metadata-options" role="group" aria-label="Select multiple hashtags"></div>
+            <input type="hidden" id="selectedMetadata" autocomplete="off" aria-hidden="true" />
+          </div>
+
+          <!-- Uploader -->
+          <div class="form-row">
+            <label for="fileInput">Upload Image</label>
+            <div id="uploader" class="uploader" role="region" aria-label="Image uploader (drag and drop)">
+              <div class="muted">Drag &amp; drop an image here, or</div>
+              <div class="actions">
+                <button type="button" class="btn" id="pickFile">Choose File</button>
+                <button type="button" class="btn ghost" id="clearFile" disabled>Clear</button>
+              </div>
+              <input id="fileInput" type="file" accept="image/*" />
+            </div>
+            <div class="muted">Images are previewed instantly. On post, the image is uploaded and the returned public URL is used.</div>
+          </div>
+
+          <!-- Platform toggles -->
+          <div class="form-row">
+            <label>Select platforms</label>
+            <div class="platforms" id="platformToggles" role="group" aria-label="Platforms">
+              <button type="button" class="toggle" data-platform="x" aria-pressed="false">X (Twitter)</button>
+              <button type="button" class="toggle" data-platform="instagram" aria-pressed="false">Instagram</button>
+              <button type="button" class="toggle" data-platform="facebook" aria-pressed="false">Facebook</button>
+              <button type="button" class="toggle" data-platform="pinterest" aria-pressed="false">Pinterest</button>
+            </div>
+            <span class="muted">Click to toggle each platform. The bottom button posts to all selected.</span>
+          </div>
+
+          <!-- X extras -->
+          <div class="form-row" id="xExtras" style="display:none">
+            <label class="inline">X character counter <span class="muted">(280 limit)</span></label>
+            <div class="inline muted">Remaining: <span id="xCount" class="counter">280</span></div>
+          </div>
+
+          <!-- Pinterest extras -->
+          <div class="form-row" id="pinterestExtras" style="display:none">
+            <label for="pinterestTitle">Pinterest Title</label>
+            <input id="pinterestTitle" type="text" placeholder="e.g., Funny MBTI Meme" required />
+            <label for="board">Pinterest Board</label>
+            <select id="board">
+              <option value="">Loading boards…</option>
+            </select>
+            <label for="altText">Alt Text <span class="muted">(auto-filled from title; editable)</span></label>
+            <input id="altText" type="text" />
+          </div>
+
+          <!-- Post button -->
+          <div class="form-row">
+            <button id="postAll" class="btn primary" disabled>Post to Selected</button>
+          </div>
+
+          <!-- Result/status for a11y -->
+          <div id="result" aria-live="polite" role="status"></div>
+        </div>
+      </section>
+
+      <!-- Preview & status -->
+      <aside class="card" aria-labelledby="previewHeading">
+        <div class="body">
+          <h2 id="previewHeading">Live Preview</h2>
+          <div class="preview">
+            <div class="media" id="mediaPreview" aria-label="Media preview">
+              <span class="muted">No image yet</span>
+            </div>
+            <div>
+              <div class="muted">Title</div>
+              <div id="previewTitle">—</div>
+            </div>
+            <div>
+              <div class="muted">Caption / Description</div>
+              <div id="previewDesc">—</div>
+            </div>
+          </div>
+
+          <h2 style="margin-top:16px">Status</h2>
+          <div id="status" class="status" aria-live="polite"></div>
+        </div>
+      </aside>
+    </div>
   </main>
 </body>
 </html>
