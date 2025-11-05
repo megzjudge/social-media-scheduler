@@ -1,131 +1,130 @@
-"use strict";
+// --- Safe DOM get ---
+const $ = (id) => document.getElementById(id);
 
-// Hashtag options (without #)
-const metadataOptions = ["mbti", "mbtimemes", "entp", "entj", "intp", "intj"];
-const selectedMetadata = new Set();
+// Grab elements (they may be null if HTML changed)
+const nameEl = $('name');
+const urlEl = $('url');
+const metadataContainer = $('metadataContainer');
+const selectedMetadataEl = $('selectedMetadata');
+const xExtras = $('xExtras');
+const xCount = $('xCount');
+const pinterestExtras = $('pinterestExtras');
+const pinterestTitleEl = $('pinterestTitle');
+const boardEl = $('board');
+const altTextEl = $('altText');
+const postBtn = $('postAll');
+const statusEl = $('status');
+const mediaPreview = $('mediaPreview');
+const previewTitle = $('previewTitle');
+const previewDesc = $('previewDesc');
+const platformToggles = $('platformToggles');
+const uploader = $('uploader');
+const fileInput = $('fileInput');
+const pickFileBtn = $('pickFile');
+const clearFileBtn = $('clearFile');
+const resultEl = $('result');
 
-// DOM
-const metadataContainer = document.getElementById("metadataContainer");
-const resultEl = document.getElementById("result");
-const titleEl = document.getElementById("pinterestTitle");
-const altEl = document.getElementById("altText");
-const boardSelect = document.getElementById("board");
-const urlEl = document.getElementById("url");
-const nameEl = document.getElementById("name");
-const hiddenSelected = document.getElementById("selectedMetadata");
-const form = document.getElementById("postForm");
-
-// A11y status region
-resultEl.setAttribute("role", "status");
-resultEl.setAttribute("aria-live", "polite");
-
-// Build accessible “chips”
-(function initChips() {
-  metadataOptions.forEach((opt) => {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "metadata-option";
-    btn.textContent = opt;
-    btn.setAttribute("aria-pressed", "false");
-    btn.addEventListener("click", () => toggleChip(opt, btn));
-    btn.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        toggleChip(opt, btn);
-      }
-    });
-    metadataContainer.appendChild(btn);
-  });
-})();
-
-function toggleChip(opt, btn) {
-  if (selectedMetadata.has(opt)) {
-    selectedMetadata.delete(opt);
-    btn.setAttribute("aria-pressed", "false");
-    btn.classList.remove("selected");
-  } else {
-    selectedMetadata.add(opt);
-    btn.setAttribute("aria-pressed", "true");
-    btn.classList.add("selected");
-  }
-  hiddenSelected.value = [...selectedMetadata].join(" ");
+// Guard: if critical nodes are missing, bail gracefully
+function assert(el, id) {
+  if (!el) console.warn(`[UI] Missing #${id}`);
+  return !!el;
 }
 
-// Mirror title -> alt text; clamp to 500
-titleEl.addEventListener("input", (e) => {
-  const val = e.target.value.slice(0, 100); // Pinterest title ~100 chars
-  if (e.target.value !== val) e.target.value = val;
-  const autoAlt = val.slice(0, 500);
-  if (altEl.value === "" || document.activeElement !== altEl) {
-    altEl.value = autoAlt;
+// Wrap all wiring so we don’t call addEventListener on nulls
+function initUI() {
+  // Wire platform toggles
+  if (assert(platformToggles, 'platformToggles')) {
+    platformToggles.querySelectorAll('.toggle').forEach(btn => {
+      btn.addEventListener('click', () => togglePlatform(btn));
+    });
   }
-});
 
-// Fetch boards on load
-(async function fetchBoards() {
+  // Inputs
+  if (assert(nameEl, 'name')) nameEl.addEventListener('input', updatePreview);
+  if (assert(urlEl, 'url')) urlEl.addEventListener('input', updatePreview);
+
+  if (assert(pinterestTitleEl, 'pinterestTitle')) {
+    pinterestTitleEl.addEventListener('input', (e) => {
+      if (altTextEl && !altTextEl.value) altTextEl.value = e.target.value.slice(0, 100);
+      updatePreview();
+    });
+  }
+  if (assert(altTextEl, 'altText')) altTextEl.addEventListener('input', updatePreview);
+
+  // Uploader
+  if (assert(pickFileBtn, 'pickFile') && assert(fileInput, 'fileInput')) {
+    pickFileBtn.addEventListener('click', () => fileInput.click());
+  }
+  if (assert(clearFileBtn, 'clearFile')) {
+    clearFileBtn.addEventListener('click', () => {
+      chosenFile = null;
+      if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
+      clearFileBtn.disabled = true;
+      updatePreview();
+    });
+  }
+  if (assert(fileInput, 'fileInput')) {
+    fileInput.addEventListener('change', handleFiles);
+  }
+  if (assert(uploader, 'uploader')) {
+    ['dragenter','dragover'].forEach(evt => uploader.addEventListener(evt, e => {
+      e.preventDefault(); e.stopPropagation(); uploader.classList.add('drag');
+    }));
+    ['dragleave','drop'].forEach(evt => uploader.addEventListener(evt, e => {
+      e.preventDefault(); e.stopPropagation(); uploader.classList.remove('drag');
+    }));
+    uploader.addEventListener('drop', (e) => {
+      const f = e.dataTransfer.files && e.dataTransfer.files[0];
+      if (f && fileInput) { fileInput.files = e.dataTransfer.files; handleFiles(); }
+    });
+  }
+
+  // Post button
+  if (assert(postBtn, 'postAll')) {
+    postBtn.addEventListener('click', handlePostAll);
+  }
+
+  // Build hashtag chips only if container exists
+  if (assert(metadataContainer, 'metadataContainer')) initHashtags();
+
+  // Boards dropdown (robust JSON parsing)
+  if (assert(boardEl, 'board')) fetchBoards();
+
+  updatePreview();
+}
+
+// Robust /boards fetch: detect accidental HTML
+async function fetchBoards() {
   try {
-    const r = await fetch("/api/boards", { headers: { Accept: "application/json" } });
-    if (!r.ok) throw new Error(`Boards error ${r.status}`);
-    const boards = await r.json();
-    boardSelect.innerHTML = '<option value="">Select a board</option>';
-    boards.forEach((b) => {
-      const opt = document.createElement("option");
+    const res = await fetch('/boards', { headers: { 'Accept': 'application/json' } });
+    const text = await res.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      // Got HTML or non-JSON -> show first chars for diagnosis
+      throw new Error(`Expected JSON from /boards, got: ${text.slice(0, 80)}…`);
+    }
+    if (!Array.isArray(data)) throw new Error('Boards response is not an array');
+
+    boardEl.innerHTML = '<option value="">Select a board</option>';
+    data.forEach(b => {
+      const opt = document.createElement('option');
       opt.value = b.id;
       opt.textContent = b.name;
-      boardSelect.appendChild(opt);
+      boardEl.appendChild(opt);
     });
   } catch (err) {
     console.error(err);
-    boardSelect.innerHTML = '<option value="">Error loading boards</option>';
-    resultEl.textContent = "Could not load boards. Check your API token/server.";
+    if (boardEl) boardEl.innerHTML = '<option value="">Error loading boards</option>';
+    if (resultEl) resultEl.textContent = 'Could not load boards. Check your functions/boards.js route and token.';
   }
-})();
+  refreshPostEnabled();
+}
 
-// Submit: validate + post
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  resultEl.textContent = "Posting to Pinterest…";
-
-  // Basic validations
-  const title = titleEl.value.trim();
-  const boardId = boardSelect.value.trim();
-  const mediaUrl = urlEl.value.trim();
-  const nameVal = nameEl.value.trim();
-  const altText = altEl.value.trim().slice(0, 500);
-
-  if (!title || !boardId || !mediaUrl) {
-    resultEl.textContent = "Please fill Title, Media URL, and select a Board.";
-    return;
-  }
-
-  // Description: name + hashtags (space-separated) (<= 500)
-  const hashtags = [...selectedMetadata].map((t) => `#${t}`).join(" ");
-  const description = `${nameVal} ${hashtags}`.trim().slice(0, 500);
-
-  try {
-    const response = await fetch("/api/post", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({ title, boardId, description, mediaUrl, altText }),
-    });
-
-    const contentType = response.headers.get("content-type") || "";
-    const data =
-      contentType.includes("application/json") ? await response.json() : {};
-
-    if (response.ok) {
-      resultEl.textContent = `✅ Success! Pin ID: ${data.pinId || "(unknown)"}`;
-      form.reset();
-      hiddenSelected.value = "";
-      [...metadataContainer.querySelectorAll(".metadata-option")].forEach((b) => {
-        b.classList.remove("selected");
-        b.setAttribute("aria-pressed", "false");
-      });
-      altEl.value = "";
-    } else {
-      resultEl.textContent = `❌ Error: ${data.error || response.statusText}`;
-    }
-  } catch (error) {
-    resultEl.textContent = `❌ Network error: ${error.message}`;
-  }
-});
+// Call init as soon as the DOM is parsed (defer should guarantee this; extra safety here)
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initUI);
+} else {
+  initUI();
+}
