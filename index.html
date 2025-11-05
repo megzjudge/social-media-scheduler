@@ -7,13 +7,12 @@
   <meta property="og:title" content="Social Media Scheduler - Twitter/X/Instagram/Facebook/Pinterest Auto Posting">
   <meta property="twitter:title" content="Social Media Scheduler - Twitter/X/Instagram/Facebook/Pinterest Auto Posting">
   <meta property="og:site_name" content="Social Media Scheduler - Twitter/X/Instagram/Facebook/Pinterest Auto Posting">
-  <link rel="stylesheet" type="text/css" href="styles.css"> 
   <link rel="alternate" href="https://social-media-scheduler.jdge.cc" hreflang="en">
   <link rel="canonical" href="https://social-media-scheduler.jdge.cc">
   <meta property="og:url" content="https://social-media-scheduler.jdge.cc">
   <link rel="icon" type="image/svg+xml" href="images/social-media-scheduler-logo.png">
-  <meta property="og:image" content="https://social-media-scheduler.jdge.cc/images/hexaco_thumbnail.jpg">  
-  <link itemprop="twitter:image" href="https://social-media-scheduler.jdge.cc/images/hexaco_thumbnail.jpg">
+  <meta property="og:image" content="https://social-media-scheduler.jdge.cc/images/social-media-scheduler-logo.png">  
+  <link itemprop="twitter:image" href="https://social-media-scheduler.jdge.cc/images/social-media-scheduler-logo.png">
   <link itemprop="twitter:image:alt" href="Social Media Scheduler - Twitter/X/Instagram/Facebook/Pinterest Auto Posting">
   <link itemprop="thumbnailUrl" href="https://social-media-scheduler.jdge.cc/social-media-scheduler-logo.png">
   <meta name="twitter:card" content="summary_large_image">
@@ -29,6 +28,7 @@
   <meta name="keywords" content="social media scheduler, Twitter, X, Pinterest, Instagram, Facebook, auto posting, hashtags, metadata, social media management, content scheduling">
   <meta name="subject" content="Social Media Scheduler - Twitter/X/Instagram/Facebook/Pinterest Auto Posting">
   <meta name="theme-color" content="#4E6E39">
+  <link rel="stylesheet" type="text/css" href="styles.css"> 
   <script src="script.js" defer></script>
 </head>
 <body>
@@ -69,6 +69,8 @@
         <label for="altText">Alt Text (Auto-filled from Title):</label>
         <input type="text" id="altText" autocomplete="off" readonly>
       </div>
+
+      <div id="result" aria-live="polite" role="status"></div>
       
       <button type="submit">Post to Pinterest</button>
     </form>
