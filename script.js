@@ -2,7 +2,7 @@
 "use strict";
 
 // ===== Globals / State =====
-const metadataOptions = ["mbti","mbtimemes","entp","entj","intp","intj"];
+const metadataOptions = ["mbti", "mbtimemes", "entp", "entj", "intp", "intj", "enfp", "enfj", "infp", "infj", "estp", "estj", "istp", "istj", "esfp", "esfj", "isfp", "isfj", "mbtitypes", "myersbriggs", "personality", "mbtifun", "personalitytypes", "mbtipersonality", "psychology", "psychologymemes", "entrovert", "introvert"];
 const selectedMetadata = [];
 const selectedPlatforms = new Set();
 

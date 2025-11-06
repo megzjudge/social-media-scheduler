@@ -21,6 +21,7 @@ main {
   max-width: 1100px;
   margin: 32px auto;      /* centers the page */
   padding: 0 16px;         /* even left/right padding */
+  overflow-x: hidden;
 }
 
 h1 { margin: 20px 0; }
@@ -169,11 +170,24 @@ button:hover { background: #eee; }
 }
 
 /* Caption below image (with extra breathing room) */
+/* Prevent long URLs/text from overflowing the preview */
 #previewCaption {
   margin-top: 14px;
-  padding: 4px 0;
+  padding: 0px 0px 30px 0px;
   font-size: 1rem;
   line-height: 1.4;
+  white-space: pre-wrap;     /* keep user line breaks */
+  overflow-wrap: anywhere;   /* wrap really long words/urls */
+  word-break: break-word;    /* extra guard for long tokens */
+  hyphens: auto;
+}
+
+/* Make links wrap too (no horizontal scroll) */
+#previewCaption a {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  text-decoration: underline;
+  color: #0b65c2;
 }
 
 /* ===== Mobile adjustments ===== */

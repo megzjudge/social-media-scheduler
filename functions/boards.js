@@ -18,7 +18,7 @@ export async function onRequest({ env }) {
       error: "Pinterest API error",
       status: r.status,
       details: data?.message || data?.error || data?.raw || data,
-      hint: "Token invalid/expired or missing scope. Needs boards:read.",
+      hint: "Token invalid/expired or missing scope (needs boards:read).",
     }, r.status);
   }
 
